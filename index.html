@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Market P.A Style</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* CSS STYLE */
+    body { font-family: sans-serif; margin: 0; background: #f5f5f5; }
+    .header { background: #ee4d2d; color: white; padding: 15px; position: sticky; top: 0; z-index: 100; }
+    .header-inner { max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 22px; font-weight: bold; }
+    .search-box input { padding: 8px; width: 250px; border-radius: 4px; border: none; }
+
+    .section { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+    .produk-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+    
+    .produk { background: white; border-radius: 5px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); cursor: pointer; }
+    .produk img { width: 100%; height: 160px; object-fit: cover; }
+    .produk-info { padding: 10px; }
+    .produk-info h3 { font-size: 14px; margin: 5px 0; height: 35px; overflow: hidden; color: #333; }
+    .harga { color: #ee4d2d; font-weight: bold; font-size: 15px; margin: 0; }
+
+    /* MODAL DETAIL */
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; }
+    .modal-content { background: white; margin: 2% auto; padding: 20px; width: 90%; max-width: 800px; border-radius: 8px; position: relative; }
+    .close { position: absolute; right: 20px; top: 10px; font-size: 30px; cursor: pointer; }
+    .detail-flex { display: flex; gap: 20px; flex-wrap: wrap; }
+    .detail-flex img { width: 300px; max-width: 100%; border-radius: 5px; }
+    
+    .kategori-tag { background: #fef6f5; color: #ee4d2d; padding: 4px 8px; font-size: 12px; border-radius: 3px; display: inline-block; margin-bottom: 10px; }
+    hr { border: 0; border-top: 1px solid #eee; margin: 25px 0; }
+    .footer { text-align: center; padding: 20px; color: #888; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">Market P.A</div>
+      <div class="search-box"><input type="text" placeholder="Cari di Market P.A..."></div>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2>Rekomendasi Untuk Anda</h2>
+    <div id="list-rekomendasi" class="produk-list"></div>
+  </section>
+
+  <section class="section">
+    <h2>Produk Lainnya</h2>
+    <div id="list-lainnya" class="produk-list"></div>
+  </section>
+
+  <div id="productModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="modal-body" class="detail-flex"></div>
+      
+      <hr>
+      <h3 id="judul-serupa">Produk Serupa</h3>
+      <div id="list-serupa" class="produk-list"></div>
+    </div>
+  </div>
+
+  <footer class="footer">© 2025 Market P.A Style</footer>
+
+  <script>
+    // DATA PRODUK DENGAN KATEGORI
+    const SEMUA_PRODUK = [
+      { id: 1, nama: "Sepatu Adidas Samba", harga: "Rp 150.000", img: "e6084e285f8682d9617493a0e2a298d8.jpg", kat: "fashion" },
+      { id: 2, nama: "Jaket Adidas", harga: "Rp 220.000", img: "d6d4bc2ee6755bab3314776ebc96e7df.jpg", kat: "fashion" },
+      { id: 3, nama: "Celana Dickies", harga: "Rp 100.000", img: "ba60cf4703309bc913ffd20e01a432ec.jpg", kat: "fashion" },
+      { id: 4, nama: "Tas Ransel", harga: "Rp 175.000", img: "433aa55161aefe46c7b515276d641aaf.jpg", kat: "fashion" },
+      { id: 5, nama: "Kaos Oasis", harga: "Rp 50.000", img: "2d4d1b460ad615c1762ee78764c34288.jpg", kat: "fashion" },
+      { id: 6, nama: "Jam Tangan", harga: "Rp 120.000", img: "690913c0df034fef88c6ea75564abaa7.jpg", kat: "aksesoris" },
+      { id: 7, nama: "Keyboard Mechanical", harga: "Rp 350.000", img: "01fc2687b527402688101e54b6ea70d5.jpg", kat: "elektronik" },
+      { id: 8, nama: "Mouse Wireless", harga: "Rp 85.000", img: "d0155e1ad361723857b4b73a3c8fea64.jpg", kat: "elektronik" },
+      { id: 9, nama: "Botol Minum", harga: "Rp 30.000", img: "43d2bbefdb7e87336c084419ffa1a209.jpg", kat: "alat-rumah" },
+      { id: 10, nama: "Powerbank 10.000mAh", harga: "Rp 180.000", img: "649d23a8c0f0f14290c117d4173e57eb.jpg", kat: "elektronik" }
+    ];
+
+    // Render Awal
+    function renderAwal() {
+      const rek = SEMUA_PRODUK.slice(0, 4);
+      const lain = SEMUA_PRODUK.slice(4);
+      
+      document.getElementById('list-rekomendasi').innerHTML = rek.map(p => HTMLProduk(p)).join('');
+      document.getElementById('list-lainnya').innerHTML = lain.map(p => HTMLProduk(p)).join('');
+    }
+
+    function HTMLProduk(p) {
+      return `
+        <div class="produk" onclick="bukaDetail(${p.id})">
+          <img src="${p.img}">
+          <div class="produk-info">
+            <h3>${p.nama}</h3>
+            <p class="harga">${p.harga}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function bukaDetail(id) {
+      const p = SEMUA_PRODUK.find(item => item.id === id);
+      const modal = document.getElementById('productModal');
+      
+      // Isi Detail
+      document.getElementById('modal-body').innerHTML = `
+        <img src="${p.img}">
+        <div>
+          <span class="kategori-tag">Kategori: ${p.kat}</span>
+          <h2>${p.nama}</h2>
+          <p class="harga" style="font-size:24px">${p.harga}</p>
+          <p>Barang ini sedang tren! Miliki sekarang sebelum kehabisan stok.</p>
+          <button style="background:#ee4d2d; color:white; border:none; padding:12px 20px; border-radius:3px; cursor:pointer; width:100%">Beli Sekarang</button>
+        </div>
+      `;
+
+      // LOGIKA PRODUK SERUPA (Berdasarkan Kategori)
+      const serupa = SEMUA_PRODUK.filter(item => item.kat === p.kat && item.id !== p.id);
+      
+      document.getElementById('judul-serupa').innerText = `Produk ${p.kat} Lainnya`;
+      document.getElementById('list-serupa').innerHTML = serupa.length > 0 
+        ? serupa.map(s => HTMLProduk(s)).join('')
+        : "<p>Belum ada produk serupa lainnya.</p>";
+
+      modal.style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById('productModal').style.display = "none";
+    }
+
+    window.onclick = (e) => { if(e.target.id == 'productModal') closeModal(); }
+    renderAwal();
+  </script>
+</body>
+</html>

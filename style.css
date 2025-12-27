@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+/* HEADER */
+.header {
+  background-color: #57b148;
+  padding: 15px 20px;
+  color: rgb(254, 248, 248);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.search-box {
+  width: 50%;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 3px;
+  border: none;
+}
+
+/* BANNER */
+.banner {
+  margin: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.banner img {
+  width: 100%;
+  display: block;
+}
+
+/* SECTION */
+.section {
+  background-color: rgb(242, 242, 242);
+  margin: 20px;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.section h2 {
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+/* PRODUK */
+.produk-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.produk {
+  border: 1px solid #010101;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+  transition: 0.2s;
+}
+
+.produk:hover {
+  transform: translateY(-3px);
+}
+
+.produk img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.produk-info {
+  padding: 10px;
+}
+
+.produk-info h3 {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.harga {
+  color: #302d2c;
+  font-weight: bold;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  font-size: 14px;
+}
